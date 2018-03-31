@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" ng-app="FTentry">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!--hammer.js-->
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+  <!--Font-awesome-->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- AngularJS CDN and module-->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+
+  <!-- Goolge include JS function -->
+  <script src="clientJS.js"></script>
+  <?!= include('clientJS'); ?>
+
+  <title>Financial Tracker Form</title>
+</head>
+<body ng-controller="txnController as txn">
+  <button ng-click ="txn.add_entry()" id="nav">+</button>
+  <button ng-click="txn.remove_entry()">-</button>
+  <input type="number" class="fomr-control" id="txn_num" value = {{txn.entries.length}}>
+<h1>12321231231231</h1>
+  <div ng-repeat="entry in txn.entries">
+    <p>{{entry}}</p>
+  </div>
+
+
+  <div class="container">
+    <div class="card" ng-repeat="entry in txn.entries">
+      <form name="txnform" ng-submit="txnform.$valid && txn.process(entry)">
+        <div class="card-header">
+
+          <!-- multi_ccy -->
+          <div class="form-row float-right mb-2">
+            <!-- open camera capture -->
+            <div class="col col-auto">
+              <button type="button" class="btn btn-secondary" id="upload"><i class="fas fa-camera-retro fa-lg"></i></button>
+              <input type="file" accept="image/*" capture="environment" class="form-control" style="display:none" >
+            </div>
+            <!-- multi currency -->
+            <div class="col col-auto">
+              <div class="btn-group btn-group-toggle">
+                <label class="btn btn-secondary" ng-class="{active : !entry.multi_ccy}">
+                  <input ng-model="entry.multi_ccy" type="radio" ng-value="false" name="multi_radio" required><i class="fas fa-dollar-sign"></i>
+                </label>
+                <label class="btn btn-secondary" ng-class="{active : entry.multi_ccy}">
+                  <input ng-model="entry.multi_ccy" type="radio" ng-value="true" name="multi_radio"><i class="fas fa-dollar-sign"></i><i class="fas fa-dollar-sign"></i>
+                </label>
+              </div>
+            </div>
+            <!-- submit -->
+            <div class="col col-auto">
+              <button type="submit" class="btn btn-primary form-control">Submit
+                <i ng-show="false" class="fa fa-spinner fa-spin"></i>
+              </button>
+            </div>
+          </div>
+
+          <h5 class="card-title">{{txnform.$valid}}</h5>
+        </div>
+
+<div class="card-body pb-0" >
+          <!-- transaciton date -->
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fas fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input ng-model="entry.date" type="date" class="form-control" required>
+            </div>
+          </div>
+
+
+          <!-- category selection -->
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fas fa-tags fa-xs"></i>
+                </span>
+              </div>
+              <select ng-model="entry.category" ng-options="c for c in txn.category.Category" class="form-control custom-select" id="category" required></select>
+            </div>
+          </div>
+
+
+          <!-- description -->
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fas fa-info-circle"></i>
+                </span>
+              </div>
+              <input ng-model="entry.desc" type="text" class="form-control" placeholder="Description" required>
+            </div>
+          </div>
+
+          <!-- source account -->
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  source&nbsp;<i class="fas fa-user-circle"></i>
+                </span>
+              </div>
+              <select ng-model="entry.source.acc" class="form-control custom-select" required>
+                <option ng-repeat="a in txn.account.Account" ng-disabled="a===entry.target.acc" value={{a}}>{{a}}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- source amt -->
+          <div class="form-group form-row">
+            <div class="col col-sm-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                </div>
+                <input ng-model="entry.source.amt" type="number" step="any" class="form-control" required>
+              </div>
+            </div>
+            <!-- source currency -->
+            <div class="col col-auto">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-database"></i>
+                  </span>
+                </div>
+                <select ng-model="entry.source.ccy" ng-options="ccy for ccy in txn.ccy.Currency" class="custom-select" ng-required="entry.multi_ccy">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- target account -->
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  target&nbsp;<i class="fas fa-user-circle"></i>
+                </span>
+              </div>
+              <select ng-model="entry.target.acc" class="form-control custom-select" required>
+                <option ng-repeat="a in txn.account.Account" ng-disabled="a===entry.source.acc" value={{a}}>{{a}}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- target amt -->
+          <div class="form-group form-row" ng-show="entry.multi_ccy">
+            <div class="col col-sm-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                </div>
+                <input ng-model="entry.target.amt" type="number" step="any" class="form-control" ng-required="entry.multi_ccy">
+              </div>
+            </div>
+            <!-- target currency -->
+            <div class="col col-auto">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-database"></i>
+                  </span>
+                </div>
+                <select ng-model="entry.target.ccy" ng-options="ccy for ccy in txn.ccy.Currency" class="custom-select" ng-required="entry.multi_ccy"></select>
+              </div>
+            </div>
+          </div>
+
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
