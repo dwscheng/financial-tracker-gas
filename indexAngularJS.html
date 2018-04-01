@@ -5,9 +5,6 @@
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
     
-    <!-- Goolge include JS function -->
-    <script src="clientAngularJS.js"></script>
-    
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
@@ -24,158 +21,200 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
         crossorigin="anonymous"></script>
 
-        <!-- Your application bootstrap  -->
-        <script type="text/javascript">    
-        /**
-         * You must include the dependency on 'ngMaterial' 
-         */
-        angular.module('BlankApp', ['ngMaterial', 'ngMessages']);
-        </script>
+    <!-- Goolge include JS function -->
+    <script src="clientAngularJS.js"></script>
 </head>
 
-<body ng-app="BlankApp" ng-cloak>
-    <md-toolbar>
-        <div class="md-toolbar-tools" layout-align="center center">
-            <!-- <span flex></span> -->
+<body ng-app="TrackerApp" ng-cloak>
+    <div ng-controller="TransactionCtrl as txnctrl">
+        <!-- top toolbar to add remove cards -->
+        <md-toolbar>
+            <div class="md-toolbar-tools" layout-align="center center">        
+                <!-- add button -->
+                <md-button class="md-icon-button" aria-label="more" ng-click="txnctrl.add_entry()">
+                    <md-icon md-font-icon="classname">add_circle</md-icon>
+                </md-button>
     
-            <!-- add button -->
-            <md-button class="md-icon-button" aria-label="more" ng-click="g.push('1')">
-                <md-icon md-font-icon="classname">add_circle</md-icon>
-            </md-button>
-
-            <!-- display number of entries -->
-            <md-button class="md-button" aria-label="Use Android">
-                1
-            </md-button>
-            
-            <!-- minus button -->
-            <md-button class="md-icon-button" aria-label="less" ng-click="g.pop('1')">
-                <md-icon md-font-icon="classname">remove_circle</md-icon>
-            </md-button>
-        </div>
-    </md-toolbar>
-    <!-- container for input form -->    
-    <md-card >
-        <form name="Track">
-            <md-progress-linear md-mode="indeterminate" ng-show="data.cb1"></md-progress-linear>
-            <md-card-content ng-show="!data.cb2">
-                <!-- <div layout="column" > -->
+                <!-- display number of entries -->
+                <md-button class="md-button" aria-label="Use Android">
+                    {{txnctrl.entries.length}}
+                </md-button>
+                
+                <!-- minus button -->
+                <md-button class="md-icon-button" aria-label="less" ng-click="txnctrl.remove_entry()">
+                    <md-icon md-font-icon="classname">remove_circle</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <!--in dividual card for input -->    
+        <md-card ng-repeat="entry in txnctrl.entries">
+            <form name="txnform" ng-submit="txnform.$valid && txnctrl.process(entry)">
+                <md-progress-linear md-mode="indeterminate" ng-show="entry.processing"></md-progress-linear>
+                <!-- card content -->
+                <md-card-content ng-hide="entry.hide">
+                    
+                    <!-- switch and date picker -->
                     <div layout="row">
-                        <md-switch ng-model="data.cb1" aria-label="Switch 1">
+
+                        <!-- multicurrency switch -->
+                        <md-switch ng-model="entry.multi_ccy">
                             Multi-currency
                         </md-switch>
+                        
+                        <!-- spacer -->
                         <span flex></span>
+                        
                         <!-- transaciton date -->
                         <md-input-container>
                             <label>Date</label>
-                            <md-datepicker required ng-model="user.submissionDate"></md-datepicker>
+                            <md-datepicker required ng-model="entry.date"></md-datepicker>
                         </md-input-container>
+
                     </div>
                     
+                    <!-- description row -->
                     <div layout="row">
-                        <!-- description -->
+                        <!-- description input -->
                         <md-input-container flex>
                             <label>Description</label>
                             <md-icon md-font-icon="classname">widgets</md-icon>
-                            <input required name="description" ng-model="project.description">
+                            <input required ng-model="entry.desc">
                         </md-input-container>
-                        
+                    </div>
+                    
+                    <!-- category row -->
+                    <div layout="row">
                         <!-- category -->
                         <md-input-container flex>
                             <label>Category</label>
-                            <md-select name="category" ng-model="project.type" required>
-                                <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
-                                <md-option value="web">Website</md-option>
+                            <md-select ng-model="entry.category"  required>
+                                <!-- ng repeat for all values -->
+                                <md-option ng-repeat="c in txnctrl.category.Category" value="{{c}}">{{c}}</md-option>
                             </md-select>
                         </md-input-container>
                     </div>
+                    
+                    <!-- source account row -->
+                    <div layout="row">
+                        <!-- source account -->
+                        <md-input-container flex="90" ng-hide = entry.source.new>
+                            <label>Source Account</label>
+                            <md-icon md-font-icon="classname">account_balance</md-icon>
+                            <md-select ng-model="entry.source.acc" required>
+                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a === entry.target_acc">{{a}}</md-option>
+                            </md-select>
+                        </md-input-container>
 
-                        <div layout="row">
-                            <!-- source account -->
-                            <md-input-container flex>
-                                <label>Source Account</label>
-                                <md-icon md-font-icon="classname">account_balance</md-icon>
-                                <md-select name="source_acc" ng-model="project.type" required>
-                                    <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
-                                    <md-option value="web">Website</md-option>
-                                </md-select>
-                            </md-input-container>
-                        </div>
+                        <!-- source account -->
+                        <md-input-container flex="90" ng-show= entry.source.new>
+                            <label>Source Account</label>
+                            <md-icon md-font-icon="classname">account_balance</md-icon>
+                            <input ng-model="entry.source.acc" required>
+                        </md-input-container>
                         
-                        <div layout="row">
-                            <!-- source amount -->
-                            <md-input-container flex>
-                                <label>Amount</label>
-                                <md-icon md-font-icon="classname">attach_money</md-icon>
-                                <input required name="source_amout" ng-model="project.description">
-                            </md-input-container>
-                            
-                            <!-- source currency -->
-                            <md-input-container flex>
-                                <label>CCY</label>
-                                <md-select name="source_ccy" ng-model="project.type" required>
-                                    <md-option value="app">CAD</md-option>
-                                    <md-option value="web">USD</md-option>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-
-                            <div layout="row">
-                                <!-- target account -->
-                                <md-input-container flex>
-                                    <label>Target Account</label>
-                                    <md-icon md-font-icon="classname">account_balance</md-icon>
-                                    <md-select name="target_acc" ng-model="project.type" required>
-                                        <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
-                                        <md-option value="web">Website</md-option>
-                                    </md-select>
-                                </md-input-container>
-                            </div>
-                            
-                            <div layout="row" ng-show = data.cb1>
-                                <!-- target amount -->
-                                <md-input-container flex>
-                                    <label>Amount</label>
-                                    <md-icon md-font-icon="classname">attach_money</md-icon>
-                                    <input type="num" name="target_amount" ng-model="project.description" ng-required="data.cb1">
-                                </md-input-container>
-                                
-                                <!-- target currency -->
-                                <md-input-container flex>
-                                    <label>CCY</label>
-                                    <md-select name="target_ccy" ng-model="project.type" ng-required="data.cb1">
-                                        <md-option value="app">CAD</md-option>
-                                        <md-option value="web">USD</md-option>
-                                    </md-select>
-                                </md-input-container>
-                            </div>
-                        </div>
-                    </md-card-content>
-                    <md-card-icon-actions layout="row" layout-align="end center">
-                            <!-- <md-toolbar layout="row"> -->
-                                    <!-- expand button -->
-                                    <md-button class="md-icon-button" aria-label="More" ng-click="data.cb2=!data.cb2">
-                                        <md-icon md-font-icon="classname">list</md-icon>
-                                    </md-button>
-                                    
-                                    <!-- camera button -->
-                                    <md-button class="md-icon-button" aria-label="More">
-                                        <md-icon md-font-icon="classname">add_a_photo</md-icon>
-                                    </md-button>
-                                    
-                                    <span flex></span>
-                                    
-                                    <!-- submit button -->
-                                    <md-button class="md-icon-button" type="submit" aria-label="Submit">
-                                        <md-icon md-font-icon="classname">send</md-icon>
-                                    </md-button>
-                            </md-toolbar>
-                        </md-card-actions>
+                        <!-- <span flex></span> -->
+                        <!-- new account checkbox -->
+                        <md-input-container flex>
+                            <md-button class="md-icon-button" ng-click="entry.source.new=!entry.source.new">
+                                <md-icon md-font-icon="classname">fiber_new</md-icon>
+                            </md-button>
+                        </md-input-container>
+                    </div>
+                    
+                    <!-- source amount and ccy row -->
+                    <div layout="row">
+                        <!-- source amount -->
+                        <md-input-container flex>
+                            <label>Amount</label>
+                            <md-icon md-font-icon="classname">attach_money</md-icon>
+                            <input type="number" step="0.01" min="0" required ng-model="entry.source.amt">
+                        </md-input-container>
                         
-                    </form>
-                </md-card>
-                
-                
-            </body>
+                        <!-- source currency -->
+                        <md-input-container flex="30">
+                            <label>CCY</label>
+                            <md-select ng-model="entry.source.ccy" required>
+                                <md-option ng-repeat = "c in txnctrl.ccy.Currency" value="{{c}}">{{c}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    
+                    <!-- target account -->
+                    <div layout="row">
+                        <!-- target account -->
+                        <md-input-container flex="90" ng-hide = entry.target.new>
+                            <label>Target Account</label>
+                            <md-icon md-font-icon="classname">account_balance</md-icon>
+                            <md-select ng-model="entry.target.acc" required>
+                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a===entry.source_acc">{{a}}</md-option>
+                            </md-select>
+                        </md-input-container>
 
+                        <!-- target account -->
+                        <md-input-container flex="90" ng-show = entry.target.new>
+                            <label>Target Account</label>
+                            <md-icon md-font-icon="classname">account_balance</md-icon>
+                            <input ng-model="entry.target.acc" required>
+                        </md-input-container>
+
+                        <!-- <span flex></span> -->
+                        <!-- new account checkbox -->
+                        <md-input-container flex>
+                            <md-button class="md-icon-button" ng-click="entry.target.new=!entry.target.new">
+                                <md-icon md-font-icon="classname">fiber_new</md-icon>
+                            </md-button>
+                        </md-input-container>
+                    </div>
+                    
+                    <!-- target amoutn and ccy -->
+                    <div layout="row" ng-show = entry.multi_ccy>
+                        <!-- target amount -->
+                        <md-input-container flex>
+                            <label>Amount</label>
+                            <md-icon md-font-icon="classname">attach_money</md-icon>
+                            <input type="num" name="target_amount" ng-model="project.description" ng-required="data.cb1">
+                        </md-input-container>
+                        
+                        <!-- target currency -->
+                        <md-input-container flex="30">
+                            <label>CCY</label>
+                            <md-select name="target_ccy" ng-model="project.type" ng-required="data.cb1">
+                                <md-option value="app">CAD</md-option>
+                                <md-option value="web">USD</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </md-card-content>
+    
+                <md-card-icon-actions layout="row" layout-align="end center" layout-padding>
+                    <!-- expand button -->
+                    <md-button class="md-icon-button" ng-click="entry.hide=!entry.hide">
+                        <md-icon md-font-icon="classname">list</md-icon>
+                    </md-button>
+                    
+                    <!-- camera button -->
+                    <md-button class="md-icon-button">
+                        <md-icon md-font-icon="classname">add_a_photo</md-icon>
+                    </md-button>
+                    
+                    <span flex></span>
+                    
+                    <!-- submit button -->
+                    <md-button class="md-icon-button" type="submit">
+                        <md-icon md-font-icon="classname">send</md-icon>
+                    </md-button>
+                </md-card-icon-actions> 
+            </form>
+        </md-card>
+        <md-card>
+            <md-card-content>
+                <p style="word-wrap: break-word;">
+
+                    {{txnctrl.entries}}
+                </p>
+                
+            </md-card-content>
+        </md-card>
+    </div>
+</body>
 </html>
