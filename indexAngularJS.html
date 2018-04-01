@@ -1,0 +1,181 @@
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
+    
+    <!-- Goolge include JS function -->
+    <script src="clientAngularJS.js"></script>
+    
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>
+    
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
+    
+    <!-- Matieral icon stylesheet -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- font awesome stylesheet -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+        crossorigin="anonymous"></script>
+
+        <!-- Your application bootstrap  -->
+        <script type="text/javascript">    
+        /**
+         * You must include the dependency on 'ngMaterial' 
+         */
+        angular.module('BlankApp', ['ngMaterial', 'ngMessages']);
+        </script>
+</head>
+
+<body ng-app="BlankApp" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools" layout-align="center center">
+            <!-- <span flex></span> -->
+    
+            <!-- add button -->
+            <md-button class="md-icon-button" aria-label="more" ng-click="g.push('1')">
+                <md-icon md-font-icon="classname">add_circle</md-icon>
+            </md-button>
+
+            <!-- display number of entries -->
+            <md-button class="md-button" aria-label="Use Android">
+                1
+            </md-button>
+            
+            <!-- minus button -->
+            <md-button class="md-icon-button" aria-label="less" ng-click="g.pop('1')">
+                <md-icon md-font-icon="classname">remove_circle</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!-- container for input form -->    
+    <md-card >
+        <form name="Track">
+            <md-progress-linear md-mode="indeterminate" ng-show="data.cb1"></md-progress-linear>
+            <md-card-content ng-show="!data.cb2">
+                <!-- <div layout="column" > -->
+                    <div layout="row">
+                        <md-switch ng-model="data.cb1" aria-label="Switch 1">
+                            Multi-currency
+                        </md-switch>
+                        <span flex></span>
+                        <!-- transaciton date -->
+                        <md-input-container>
+                            <label>Date</label>
+                            <md-datepicker required ng-model="user.submissionDate"></md-datepicker>
+                        </md-input-container>
+                    </div>
+                    
+                    <div layout="row">
+                        <!-- description -->
+                        <md-input-container flex>
+                            <label>Description</label>
+                            <md-icon md-font-icon="classname">widgets</md-icon>
+                            <input required name="description" ng-model="project.description">
+                        </md-input-container>
+                        
+                        <!-- category -->
+                        <md-input-container flex>
+                            <label>Category</label>
+                            <md-select name="category" ng-model="project.type" required>
+                                <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
+                                <md-option value="web">Website</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                        <div layout="row">
+                            <!-- source account -->
+                            <md-input-container flex>
+                                <label>Source Account</label>
+                                <md-icon md-font-icon="classname">account_balance</md-icon>
+                                <md-select name="source_acc" ng-model="project.type" required>
+                                    <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
+                                    <md-option value="web">Website</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        
+                        <div layout="row">
+                            <!-- source amount -->
+                            <md-input-container flex>
+                                <label>Amount</label>
+                                <md-icon md-font-icon="classname">attach_money</md-icon>
+                                <input required name="source_amout" ng-model="project.description">
+                            </md-input-container>
+                            
+                            <!-- source currency -->
+                            <md-input-container flex>
+                                <label>CCY</label>
+                                <md-select name="source_ccy" ng-model="project.type" required>
+                                    <md-option value="app">CAD</md-option>
+                                    <md-option value="web">USD</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+
+                            <div layout="row">
+                                <!-- target account -->
+                                <md-input-container flex>
+                                    <label>Target Account</label>
+                                    <md-icon md-font-icon="classname">account_balance</md-icon>
+                                    <md-select name="target_acc" ng-model="project.type" required>
+                                        <md-option value="app">Application a;sldfjka;fldjkasdjfk</md-option>
+                                        <md-option value="web">Website</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            
+                            <div layout="row" ng-show = data.cb1>
+                                <!-- target amount -->
+                                <md-input-container flex>
+                                    <label>Amount</label>
+                                    <md-icon md-font-icon="classname">attach_money</md-icon>
+                                    <input type="num" name="target_amount" ng-model="project.description" ng-required="data.cb1">
+                                </md-input-container>
+                                
+                                <!-- target currency -->
+                                <md-input-container flex>
+                                    <label>CCY</label>
+                                    <md-select name="target_ccy" ng-model="project.type" ng-required="data.cb1">
+                                        <md-option value="app">CAD</md-option>
+                                        <md-option value="web">USD</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </md-card-content>
+                    <md-card-icon-actions layout="row" layout-align="end center">
+                            <!-- <md-toolbar layout="row"> -->
+                                    <!-- expand button -->
+                                    <md-button class="md-icon-button" aria-label="More" ng-click="data.cb2=!data.cb2">
+                                        <md-icon md-font-icon="classname">list</md-icon>
+                                    </md-button>
+                                    
+                                    <!-- camera button -->
+                                    <md-button class="md-icon-button" aria-label="More">
+                                        <md-icon md-font-icon="classname">add_a_photo</md-icon>
+                                    </md-button>
+                                    
+                                    <span flex></span>
+                                    
+                                    <!-- submit button -->
+                                    <md-button class="md-icon-button" type="submit" aria-label="Submit">
+                                        <md-icon md-font-icon="classname">send</md-icon>
+                                    </md-button>
+                            </md-toolbar>
+                        </md-card-actions>
+                        
+                    </form>
+                </md-card>
+                
+                
+            </body>
+
+</html>
