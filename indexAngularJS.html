@@ -2,6 +2,9 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
     
@@ -23,6 +26,8 @@
 
     <!-- Goolge include JS function -->
     <script src="clientAngularJS.js"></script>
+    <?!= include('clientJS'); ?>
+    <title>Expense Entry</title>
 </head>
 
 <body ng-app="TrackerApp" ng-cloak>
@@ -47,8 +52,8 @@
             </div>
         </md-toolbar>
         <!--in dividual card for input -->    
-        <md-card ng-repeat="entry in txnctrl.entries">
-            <form name="txnform" ng-submit="txnform.$valid && txnctrl.process(entry)">
+        <form name="txnform" ng-submit="txnform.$valid && txnctrl.process(entry)" ng-repeat="entry in txnctrl.entries">
+        <md-card>
                 <md-progress-linear md-mode="indeterminate" ng-show="entry.processing"></md-progress-linear>
                 <!-- card content -->
                 <md-card-content ng-hide="entry.hide">
@@ -101,7 +106,7 @@
                             <label>Source Account</label>
                             <md-icon md-font-icon="classname">account_balance</md-icon>
                             <md-select ng-model="entry.source.acc" required>
-                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a === entry.target_acc">{{a}}</md-option>
+                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a === entry.target.acc">{{a}}</md-option>
                             </md-select>
                         </md-input-container>
 
@@ -146,7 +151,7 @@
                             <label>Target Account</label>
                             <md-icon md-font-icon="classname">account_balance</md-icon>
                             <md-select ng-model="entry.target.acc" required>
-                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a===entry.source_acc">{{a}}</md-option>
+                                <md-option ng-repeat="a in txnctrl.account.Account" value="{{a}}" ng-disabled="a===entry.source.acc">{{a}}</md-option>
                             </md-select>
                         </md-input-container>
 
@@ -172,7 +177,7 @@
                         <md-input-container flex>
                             <label>Amount</label>
                             <md-icon md-font-icon="classname">attach_money</md-icon>
-                            <input type="num" name="target_amount" ng-model="project.description" ng-required="data.cb1">
+                            <input type="number" step="0.01" min="0" name="target_amount" ng-model="project.description" ng-required="data.cb1">
                         </md-input-container>
                         
                         <!-- target currency -->
@@ -183,36 +188,41 @@
                                 <md-option value="web">USD</md-option>
                             </md-select>
                         </md-input-container>
+
                     </div>
                 </md-card-content>
-    
-                <md-card-icon-actions layout="row" layout-align="end center" layout-padding>
-                    <!-- expand button -->
-                    <md-button class="md-icon-button" ng-click="entry.hide=!entry.hide">
-                        <md-icon md-font-icon="classname">list</md-icon>
-                    </md-button>
+                <md-toolbar>
                     
-                    <!-- camera button -->
-                    <md-button class="md-icon-button">
-                        <md-icon md-font-icon="classname">add_a_photo</md-icon>
-                    </md-button>
+                    <md-card-icon-actions layout="row" layout-align="end center" layout-padding>
+                        <!-- expand button -->
+                        <md-button class="md-icon-button" ng-click="entry.hide=!entry.hide">
+                            <md-icon md-font-icon="classname">list</md-icon>
+                        </md-button>
+                        
+                        <!-- camera button -->
+                        <md-button class="md-icon-button" >
+                            <md-icon md-font-icon="classname" uploadfile>add_a_photo</md-icon>
+                            <!-- <md-progress-circular class="md-warn" md-diameter="20px"></md-progress-circular> -->
+                            <!-- hidden camera uplaod -->
+                            <input id="upload" class="ng-hide" type="file" accept="image/*" capture="environment">
+                        </md-button>
                     
-                    <span flex></span>
-                    
-                    <!-- submit button -->
-                    <md-button class="md-icon-button" type="submit">
-                        <md-icon md-font-icon="classname">send</md-icon>
-                    </md-button>
-                </md-card-icon-actions> 
-            </form>
-        </md-card>
+                        <span flex></span>
+                        
+                        <!-- submit button -->
+                        <md-button class="md-icon-button" type="submit">
+                            <md-icon md-font-icon="classname">send</md-icon>
+                        </md-button>
+
+                    </md-card-icon-actions> 
+                </md-toolbar>
+            </md-card>
+        </form>
         <md-card>
             <md-card-content>
                 <p style="word-wrap: break-word;">
-
                     {{txnctrl.entries}}
                 </p>
-                
             </md-card-content>
         </md-card>
     </div>
